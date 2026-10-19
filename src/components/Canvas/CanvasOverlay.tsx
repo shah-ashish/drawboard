@@ -5,6 +5,8 @@ import { worldToScreen } from '../../utils/coordinates';
 interface CanvasOverlayProps {
   editingText: {
     elementId: string;
+    todoItemId?: string;
+    isPinned?: boolean;
     worldPos: Point;
     text: string;
     fontSize: number;
@@ -16,7 +18,7 @@ interface CanvasOverlayProps {
     verticalAlign?: 'top' | 'middle' | 'bottom';
   } | null;
   camera: Camera;
-  onCommit: (text: string) => void;
+  onCommit: (text: string, options?: { createNext?: boolean }) => void;
   onCancel: () => void;
   theme?: 'light' | 'dark';
 }
@@ -48,21 +50,16 @@ export const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
 
   if (!editingText) return null;
 
-  const screenPos = worldToScreen(editingText.worldPos, camera);
-  const scaledFontSize = Math.max(Math.round(editingText.fontSize * camera.zoom), 13);
+  const isPinned = Boolean(editingText.isPinned);
+  const screenPos = isPinned ? editingText.worldPos : worldToScreen(editingText.worldPos, camera);
+  const scaledFontSize = isPinned ? editingText.fontSize : Math.max(Math.round(editingText.fontSize * camera.zoom), 13);
   const isShape = Boolean(editingText.isShapeLabel);
-
-  const defaultW = isShape ? 120 : 180;
-  const defaultH = isShape ? 60 : 45;
-  const boxW = Math.max((editingText.bounds?.width || defaultW) * camera.zoom, 50);
-  const boxH = Math.max((editingText.bounds?.height || defaultH) * camera.zoom, 32);
-
+  const defaultW = isShape ? 120 : 180, defaultH = isShape ? 60 : 45;
+  const boxW = isPinned ? (editingText.bounds?.width || defaultW) : Math.max((editingText.bounds?.width || defaultW) * camera.zoom, 50);
+  const boxH = isPinned ? (editingText.bounds?.height || defaultH) : Math.max((editingText.bounds?.height || defaultH) * camera.zoom, 32);
   const hAlign = editingText.textAlign || (isShape ? 'center' : 'left');
   const vAlign = editingText.verticalAlign || (isShape ? 'middle' : 'top');
-
-  // In flexDirection 'column', justifyContent aligns along the vertical axis
-  const vJustify =
-    vAlign === 'top' ? 'flex-start' : vAlign === 'bottom' ? 'flex-end' : 'center';
+  const vJustify = vAlign === 'top' ? 'flex-start' : vAlign === 'bottom' ? 'flex-end' : 'center';
 
   const handleInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const target = e.currentTarget;
@@ -92,7 +89,7 @@ export const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
       <textarea
         ref={textareaRef}
         defaultValue={editingText.text}
-        placeholder={isShape ? 'Type label...' : 'Type text...'}
+        placeholder={editingText.todoItemId ? 'Type task...' : isShape ? 'Type label...' : 'Type text...'}
         onInput={handleInput}
         style={{
           pointerEvents: 'auto',
@@ -102,7 +99,7 @@ export const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
           border: 'none',
           outline: 'none',
           boxShadow: 'none',
-          padding: isShape ? '6px 12px' : '4px 6px',
+          padding: editingText.todoItemId ? '2px 4px' : isShape ? '6px 12px' : '4px 6px',
           margin: 0,
           textAlign: hAlign,
           fontSize: `${scaledFontSize}px`,
@@ -113,8 +110,11 @@ export const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
             : editingText.color,
           caretColor: '#3b82f6',
           resize: 'none',
-          lineHeight: 1.35,
-          overflow: 'hidden'
+          lineHeight: editingText.todoItemId ? 1.2 : 1.35,
+          overflow: 'hidden',
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word',
+          whiteSpace: 'pre-wrap'
         }}
         onBlur={e => {
           if (!isSettledRef.current) return;
@@ -124,7 +124,10 @@ export const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
           if (e.key === 'Escape') {
             onCancel();
           } else if (e.key === 'Enter') {
-            if (isShape) {
+            if (editingText.todoItemId) {
+              e.preventDefault();
+              onCommit(e.currentTarget.value, { createNext: !e.shiftKey });
+            } else if (isShape) {
               if (!e.shiftKey) {
                 e.preventDefault();
                 onCommit(e.currentTarget.value);

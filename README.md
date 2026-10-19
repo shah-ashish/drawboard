@@ -12,7 +12,8 @@
   <a href="#features">Features</a> •
   <a href="#getting-started">Getting Started</a> •
   <a href="#keyboard-shortcuts">Shortcuts</a> •
-  <a href="#file-format">File Format</a>
+  <a href="#file-format">File Format</a> •
+  <a href="./ARCHITECTURE.md">Codebase Architecture Guide</a>
 </p>
 
 ---
@@ -35,6 +36,15 @@ All diagrams are saved as clean, human-readable **`.bd`** files directly in your
 ### 🌐 200,000+ Tech Brand Logos & Architecture Icons
 - Instant searchable library of official tech brands and cloud infrastructure logos (Docker, Kubernetes, AWS, Azure, Google Cloud, React, Next.js, Python, PostgreSQL, Redis, Kafka, and more).
 - Powered by Iconify CDN with offline/CORS resilience in VS Code webviews.
+
+### 📝 Interactive Todo & Checklist Cards
+- **Sticky Todo Cards**: Create dedicated checklists directly on the canvas with interactive checkboxes and "+ Add task" shortcuts.
+- **Pin to Screen**: Pin Todo cards to remain fixed in the viewport while zooming and panning across large architecture canvases.
+- **Progress Tracking**: Automatic real-time status badges (e.g. `✓ All 3 done` or `1/3`).
+- **Selective Connectors (`disableConnectors`)**: Todo cards and Text elements omit connector snap dots by default, keeping arrows focused on architecture nodes.
+
+### 🎯 Dynamic Interactive Cursors
+- Context-sensitive cursors that react to every tool, edge resize handle (`nwse-resize`, `nesw-resize`, `ns-resize`, `ew-resize`), canvas pan (`grab` / `grabbing`), marquee area selection (`crosshair`), and text editing (`text`).
 
 ### 📱 Device Window Frames
 - Drag-and-drop **Browser Window** mockups (with macOS traffic lights and address bar) and **Mobile Phone** mockups.
@@ -79,6 +89,7 @@ All diagrams are saved as clean, human-readable **`.bd`** files directly in your
 | **`4`** | Ellipse / Circle Tool |
 | **`5`** | Arrow Connector Tool |
 | **`6`** | Straight Line Tool |
+| **`7`** | Sticky Todo Card Tool |
 | **`T`** | Text Box Tool |
 | **`H`** | Hand / Pan Canvas Tool |
 | **`I`** or **`/`** | Open Tech Icons & Device Mockup Modal |
