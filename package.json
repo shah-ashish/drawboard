@@ -3,7 +3,7 @@
   "displayName": "Drawboard - Hand-drawn Whiteboard & Diagrams",
   "description": "Infinite hand-drawn whiteboard, system design diagrams, 200,000+ tech logos, and device frames right inside VS Code (.bd)",
   "version": "1.0.0",
-  "publisher": "drawboard",
+  "publisher": "shah-ahish",
   "icon": "media/icon.png",
   "galleryBanner": {
     "color": "#18181b",
