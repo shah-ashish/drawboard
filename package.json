@@ -1,0 +1,122 @@
+{
+  "name": "drawboard",
+  "displayName": "Drawboard - Hand-drawn Whiteboard & Diagrams",
+  "description": "Infinite hand-drawn whiteboard, system design diagrams, 200,000+ tech logos, and device frames right inside VS Code (.bd)",
+  "version": "1.0.0",
+  "publisher": "drawboard",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#18181b",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shah-ashish/drawboard"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Visualization",
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "drawboard",
+    "whiteboard",
+    "diagram",
+    "architecture",
+    "excalidraw",
+    "hand-drawn",
+    "sketch",
+    "system design",
+    "uml",
+    "flowchart"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCustomEditor:drawboard.board",
+    "onCommand:drawboard.newBoard"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "drawboard",
+        "aliases": ["Drawboard Diagram", "drawboard"],
+        "extensions": [".bd", ".dbd", ".drawboard"],
+        "mimetypes": ["application/json", "application/vnd.drawboard+json"]
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "drawboard.board",
+        "displayName": "Drawboard Whiteboard",
+        "selector": [
+          {
+            "filenamePattern": "*.bd"
+          },
+          {
+            "filenamePattern": "*.dbd"
+          },
+          {
+            "filenamePattern": "*.drawboard"
+          }
+        ],
+        "priority": "default"
+      }
+    ],
+    "commands": [
+      {
+        "command": "drawboard.newBoard",
+        "title": "Drawboard: New Diagram Board (.bd)",
+        "category": "Drawboard",
+        "icon": "$(edit)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "drawboard.newBoard",
+          "when": "true"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "drawboard.newBoard",
+          "group": "navigation",
+          "when": "resourceExtname == .bd"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build:webview": "vite build",
+    "build:extension": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "build": "npm run build:webview && npm run build:extension",
+    "package": "vsce package --no-dependencies",
+    "deploy": "vsce publish --no-dependencies",
+    "deploy:patch": "vsce publish patch --no-dependencies",
+    "deploy:minor": "vsce publish minor --no-dependencies",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^1.16.0",
+    "nanoid": "^5.0.9",
+    "perfect-freehand": "^1.2.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "roughjs": "^4.6.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/vscode": "^1.80.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.1"
+  }
+}
